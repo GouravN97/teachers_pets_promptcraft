@@ -793,6 +793,104 @@
         height: 80px;
       }
     }
+    /* === MAP SYSTEM (rv = revenant) === */
+.rv-map-toggle{
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 120;
+  display:inline-grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border-radius:10px;
+  border:1px solid rgba(61,251,255,0.18);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+  box-shadow: 0 6px 22px rgba(0,0,0,0.6);
+  cursor:pointer;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--neon-cyan);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.rv-map-toggle:hover{ transform: translateY(-4px); box-shadow: 0 10px 30px rgba(61,251,255,0.08); }
+
+.rv-map-overlay{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2,4,10,0.65);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+  z-index: 115;
+}
+.rv-map-overlay.visible{
+  opacity: 1;
+  pointer-events: all;
+}
+
+.rv-map-panel{
+  width: min(920px, 92vw);
+  max-height: 86vh;
+  background: rgba(8,12,30,0.95);
+  border: 1px solid rgba(61,251,255,0.18);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 0 40px rgba(61,251,255,0.03);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.rv-map-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.rv-map-title{
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--neon-cyan);
+  letter-spacing: 0.35em;
+  text-transform:uppercase;
+  font-size:0.78rem;
+}
+
+.rv-map-close{
+  background:transparent;
+  border:0;
+  color:var(--neon-magenta);
+  padding:8px 10px;
+  cursor:pointer;
+  font-weight:700;
+  border-radius:8px;
+}
+.rv-map-close:hover{ filter:brightness(1.15); transform:translateY(-2px); }
+
+.rv-map-wrapper{
+  overflow:auto;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.02);
+  padding:6px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+}
+.rv-map-img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height: calc(86vh - 120px);
+  object-fit: contain;
+  border-radius:6px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+@media (max-width:520px){
+  .rv-map-panel{ padding:10px; width: 96vw; max-height: 90vh; }
+  .rv-map-toggle{ width:44px; height:44px; top:0.7rem; right:0.7rem;}
+}
+
   </style>
 </head>
 <body>
@@ -1086,6 +1184,21 @@
       </div>
     </section>
   </main>
+<!-- === MAP BUTTON + OVERLAY === -->
+<button class="rv-map-toggle" id="rvMapToggle" aria-expanded="false" aria-controls="rvMapOverlay" title="Open City Map">🗺️</button>
+
+<div class="rv-map-overlay" id="rvMapOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="rv-map-panel" role="document" aria-label="City map panel">
+    <div class="rv-map-header">
+      <div class="rv-map-title">CITY MAP // NEOCITY GRID</div>
+      <button class="rv-map-close" id="rvMapClose">CLOSE</button>
+    </div>
+
+    <div class="rv-map-wrapper">
+      <img src="citymap.png" alt="City map" class="rv-map-img">
+    </div>
+  </div>
+</div>
 
   <footer>
     Revenant Division / NeoCity / Signal Auth 7G-Σ. | Fabricated entirely via AI directives. No backend. No traces.
@@ -1366,6 +1479,47 @@
       secretModal.classList.remove('visible');
       secretBuffer = '';
     });
+    /* === MAP OPEN/CLOSE (MAP LOGIC) === */
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('rvMapToggle');
+  const overlay = document.getElementById('rvMapOverlay');
+  const closeBtn = document.getElementById('rvMapClose');
+
+  if (!toggle || !overlay || !closeBtn) {
+    console.warn("Map elements missing:", { toggle, overlay, closeBtn });
+    return;
+  }
+
+  function openMap(){
+    overlay.classList.add('visible');
+    overlay.setAttribute('aria-hidden','false');
+    toggle.setAttribute('aria-expanded','true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMap(){
+    overlay.classList.remove('visible');
+    overlay.setAttribute('aria-hidden','true');
+    toggle.setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+  }
+
+  toggle.addEventListener('click', () => {
+    if (overlay.classList.contains('visible')) closeMap();
+    else openMap();
+  });
+
+  closeBtn.addEventListener('click', closeMap);
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeMap();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('visible')) closeMap();
+  });
+});
+
   </script>
 </body>
 </html>
