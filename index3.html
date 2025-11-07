@@ -1104,6 +1104,42 @@
       .wave::after {
         height: 80px;
       }
+      .city-map-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: brightness(0.8) contrast(1.2);
+    }
+
+        .map-overlay-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          mix-blend-mode: screen;
+        }
+
+        .hotspot {
+          position: absolute;
+          cursor: pointer;
+          border: 2px solid transparent;
+          transition: all 0.4s ease;
+          z-index: 2;
+        }
+
+        .hotspot:hover {
+          border-color: var(--neon-cyan);
+          background: rgba(61, 251, 255, 0.15);
+          box-shadow: 0 0 30px rgba(61, 251, 255, 0.4), inset 0 0 20px rgba(61, 251, 255, 0.2);
+        }
+
+        .hotspot.active {
+          border-color: var(--neon-magenta);
+          background: rgba(255, 31, 184, 0.2);
+          box-shadow: 0 0 35px rgba(255, 31, 184, 0.5);
+        }
     }
   </style>
 </head>
@@ -1402,35 +1438,17 @@
       <span class="step-label">Phase 6 // Territory Mesh</span>
       <h2>NeoCity Control Visualizer</h2>
       <div class="map-wrap">
-        <div class="map-grid">
-          <svg class="city-map" viewBox="0 0 600 420" role="img" aria-labelledby="map-title">
-            <title id="map-title">NeoCity Gang Territories</title>
-            <defs>
-              <linearGradient id="ally-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="rgba(84, 255, 176, 0.7)" />
-                <stop offset="100%" stop-color="rgba(61, 251, 255, 0.4)" />
-              </linearGradient>
-            </defs>
-            <polygon class="district revenant" tabindex="0" data-gang="revenant" points="95,110 230,70 285,135 245,220 130,210" />
-            <polygon class="district chrome" tabindex="0" data-gang="chrome" points="280,80 420,60 470,150 360,210 290,170" />
-            <polygon class="district azure" tabindex="0" data-gang="azure" points="150,230 260,230 300,315 210,355 130,310" />
-            <polygon class="district wraith" tabindex="0" data-gang="wraith" points="315,240 420,220 505,260 460,330 360,320" />
-            <polygon class="district lotus" tabindex="0" data-gang="lotus" points="70,240 125,260 150,335 90,360 40,300" />
-
-            <line class="relationship-line ally" x1="180" y1="170" x2="310" y2="150" />
-            <line class="relationship-line rival" x1="320" y1="160" x2="445" y2="255" />
-            <line class="relationship-line rival" x1="165" y1="280" x2="440" y2="270" />
-            <line class="relationship-line ally" x1="155" y1="280" x2="90" y2="310" />
-
-            <circle class="relationship-node ally" cx="180" cy="170" r="7" />
-            <circle class="relationship-node ally" cx="310" cy="150" r="7" />
-            <circle class="relationship-node rival" cx="445" cy="255" r="7" />
-            <circle class="relationship-node rival" cx="320" cy="160" r="7" />
-            <circle class="relationship-node rival" cx="165" cy="280" r="7" />
-            <circle class="relationship-node rival" cx="440" cy="270" r="7" />
-            <circle class="relationship-node ally" cx="90" cy="310" r="7" />
-          </svg>
-        </div>
+       <div class="map-grid">
+        <img src="citymap.png" alt="NeoCity Territory Map" class="city-map-img">
+        <canvas id="map-canvas" class="map-overlay-canvas"></canvas>
+        
+        <!-- Clickable hotspots -->
+        <div class="hotspot revenant-zone" data-gang="revenant" style="top: 20%; left: 15%; width: 25%; height: 30%;"></div>
+        <div class="hotspot chrome-zone" data-gang="chrome" style="top: 15%; left: 45%; width: 30%; height: 25%;"></div>
+        <div class="hotspot azure-zone" data-gang="azure" style="top: 50%; left: 20%; width: 25%; height: 30%;"></div>
+        <div class="hotspot wraith-zone" data-gang="wraith" style="top: 45%; left: 50%; width: 30%; height: 28%;"></div>
+        <div class="hotspot lotus-zone" data-gang="lotus" style="top: 55%; left: 8%; width: 18%; height: 25%;"></div>
+      </div>
         <div class="territory-panel">
           <span class="panel-title">Encrypted Territory Feed</span>
           <div class="territory-output">
@@ -1807,7 +1825,21 @@
       }
     };
 
-    const districtElements = document.querySelectorAll('.district');
+    const districtElements = document.querySelectorAll('.hotspot');
+    const canvas = document.getElementById('map-canvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+
+    if (canvas) {
+      const resizeCanvas = () => {
+        const img = document.querySelector('.city-map-img');
+        if (img) {
+          canvas.width = img.offsetWidth;
+          canvas.height = img.offsetHeight;
+        }
+      };
+      window.addEventListener('resize', resizeCanvas);
+      setTimeout(resizeCanvas, 100);
+    }
     const territoryGang = document.getElementById('territory-gang');
     const territoryDesc = document.getElementById('territory-desc');
     const territoryZone = document.getElementById('territory-zone');
@@ -1830,14 +1862,32 @@
     }
 
     if (districtElements.length) {
-      renderTerritory('revenant');
-      districtElements.forEach(el => {
-        const gangKey = el.dataset.gang;
-        ['mouseenter', 'focus', 'click'].forEach(evt => {
-          el.addEventListener(evt, () => renderTerritory(gangKey));
-        });
+  renderTerritory('revenant');
+  
+  districtElements.forEach(el => {
+    const gangKey = el.dataset.gang;
+    ['mouseenter', 'focus'].forEach(evt => {
+      el.addEventListener(evt, () => {
+        renderTerritory(gangKey);
+        if (ctx && canvas) {
+          const rect = el.getBoundingClientRect();
+          const canvasRect = canvas.getBoundingClientRect();
+          const x = rect.left - canvasRect.left + rect.width / 2;
+          const y = rect.top - canvasRect.top + rect.height / 2;
+          
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const gradient = ctx.createRadialGradient(x, y, 0, x, y, 100);
+          gradient.addColorStop(0, 'rgba(61, 251, 255, 0.6)');
+          gradient.addColorStop(1, 'transparent');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
       });
-    }
+    });
+    
+    el.addEventListener('click', () => renderTerritory(gangKey));
+  });
+}
 
     const parallax = document.createElement('div');
     parallax.style.position = 'fixed';
