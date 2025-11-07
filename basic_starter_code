@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Details — Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#071018;
+    --panel:#0b0f14;
+    --neon1:#00ffd5;
+    --neon2:#ff3aff;
+    --glass: rgba(255,255,255,0.03);
+  }
+  html,body{height:100%;margin:0;background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(0,255,213,0.03), transparent),
+    radial-gradient(1000px 500px at 90% 90%, rgba(255,58,255,0.02), transparent),
+    var(--bg);
+    font-family: 'Orbitron', system-ui, sans-serif;
+    color:#cfeeee;
+    -webkit-font-smoothing:antialiased;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .panel{
+    width:min(880px,92vw);
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+    border:1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    padding:28px;
+    border-radius:14px;
+    position:relative;
+    overflow:hidden;
+    backdrop-filter: blur(6px);
+  }
+
+  /* subtle scanlines */
+  .panel::before{
+    content:"";
+    pointer-events:none;
+    position:absolute;inset:0;
+    background-image:linear-gradient(transparent 92%, rgba(255,255,255,0.01) 93%);
+    mix-blend-mode:overlay;
+    opacity:0.9;
+  }
+
+  .header{
+    display:flex;align-items:center;gap:14px;margin-bottom:18px;
+  }
+  .logo{
+    width:52px;height:52px;border-radius:10px;
+    background:linear-gradient(135deg,var(--neon1),var(--neon2));
+    box-shadow:0 0 18px rgba(0,255,213,0.12), 0 0 36px rgba(255,58,255,0.06);
+    transform:skewX(-6deg);
+  }
+  .title{
+    font-size:18px;letter-spacing:1.6px;color:transparent;
+    -webkit-text-stroke: 0.6px rgba(255,255,255,0.06);
+    background:linear-gradient(90deg,var(--neon1),var(--neon2));-webkit-background-clip:text;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+
+  .field{
+    background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(0,0,0,0.06));
+    border:1px solid rgba(255,255,255,0.03);
+    padding:12px;
+    border-radius:10px;
+    min-height:52px;
+    display:flex;align-items:center;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .field input,
+  .field textarea,
+  .field select{
+    border:0;background:transparent;color:inherit;font:inherit;outline:none;width:100%;
+  }
+
+  /* neon focus */
+  .field:focus-within{
+    box-shadow:0 0 24px rgba(0,255,213,0.06), inset 0 0 30px rgba(0,255,213,0.02);
+    border-color: rgba(0,255,213,0.14);
+  }
+
+  /* tiny hologram accent */
+  .accent{
+    position:absolute;right:8px;top:8px;width:8px;height:8px;border-radius:50%;
+    background:linear-gradient(45deg,var(--neon1),var(--neon2));
+    mix-blend-mode:screen;opacity:0.95;
+    box-shadow:0 0 8px rgba(0,255,213,0.25);
+  }
+
+  .actions{
+    margin-top:16px;display:flex;gap:12px;justify-content:flex-end;
+  }
+
+  .btn{
+    --b: 2px;
+    padding:10px 16px;border-radius:10px;border:0;cursor:pointer;
+    background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));
+    color:inherit;font-weight:700;letter-spacing:0.8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 30px rgba(0,0,0,0.2);
+    position:relative;overflow:hidden;
+  }
+
+  .btn::after{
+    content:"";position:absolute;inset:0;border-radius:10px;
+    background:linear-gradient(90deg,var(--neon1),var(--neon2));
+    mix-blend-mode:screen;opacity:0;
+    transition:opacity .18s ease, transform .18s ease;
+    transform:scaleX(.6);
+  }
+  .btn:hover::after{opacity:0.14;transform:scaleX(1);}
+
+  /* tiny glitch pulse on load */
+  @keyframes flick {
+    0%{opacity:1;transform:translateY(0);}
+    50%{opacity:0.92;transform:translateY(-1px);}
+    100%{opacity:1;transform:translateY(0);}
+  }
+  .panel{animation:flick 3.2s ease-in-out infinite;}
+
+  /* responsive */
+  @media (max-width:720px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <form class="panel" onsubmit="return handleSubmit(event)">
+    <div class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="title">DETAILS</div>
+    </div>
+
+    <div class="grid">
+      <!-- Add or duplicate minimal .field blocks. Visible labels intentionally omitted. -->
+      <div class="field"><input type="text" placeholder="—"></div>
+      <div class="field"><input type="text" placeholder="—"></div>
+      <div class="field"><input type="text" placeholder="—"></div>
+
+      <div class="field"><textarea rows="3" placeholder="—"></textarea></div>
+      <div class="field"><select><option value=""> </option></select></div>
+      <div class="field"><input type="text" placeholder="—"></div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn" onclick="ghostSave()">SAVE</button>
+      <button type="submit" class="btn">SUBMIT</button>
+    </div>
+
+    <div class="accent" aria-hidden="true"></div>
+  </form>
+
+<script>
+  // Minimal JS blueprint: collect field values generically (no field names used)
+  function collect(){
+    const els = Array.from(document.querySelectorAll('.panel input, .panel textarea, .panel select'));
+    return els.map((el,idx)=>({i: idx, v: el.value}));
+  }
+
+  function ghostSave(){
+    const snapshot = collect();
+    // replace with AI-managed persistence or paste to front-end-only host
+    console.log('ghost save', snapshot);
+    flash('[saved]');
+  }
+
+  function handleSubmit(e){
+    e.preventDefault();
+    const payload = collect();
+    console.log('submit', payload); // replace with AI-driven uploader or local logic
+    flash('[submitted]');
+    return false;
+  }
+
+  function flash(text){
+    const n = document.createElement('div');
+    n.textContent = text;
+    Object.assign(n.style,{position:'fixed',right:'18px',bottom:'18px',padding:'8px 12px',
+      background:'linear-gradient(90deg,var(--neon1),var(--neon2))',color:'#001',
+      borderRadius:'8px',fontWeight:700,boxShadow:'0 8px 24px rgba(0,0,0,0.6)',zIndex:9999});
+    document.body.appendChild(n);
+    setTimeout(()=>n.remove(),1200);
+  }
+</script>
+</body>
+</html>
