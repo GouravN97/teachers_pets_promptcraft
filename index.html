@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NeoCity Intro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:#000;
+    --white:#fff;
+  }
+  html,body {
+    height:100%; margin:0; background:var(--bg); color:var(--white);
+    font-family:"IBM Plex Mono", monospace;
+    overflow:hidden;
+  }
+  .stage {
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background:var(--bg);
+    transition:filter 300ms linear, opacity 600ms ease;
+    filter:brightness(0.12);
+    z-index:2;
+  }
+  button {
+    background:none; border:none; color:var(--white); cursor:pointer;
+  }
+  .click-text {
+    font-size:clamp(11px,1.4vw,14px);
+    font-weight:500;
+    letter-spacing:0.12em;
+    color:rgba(255,255,255,0.92);
+    text-shadow:0 0 8px rgba(255,255,255,0.2);
+    transition:transform 120ms ease;
+  }
+  .light-ball {
+    position:fixed; inset:0; margin:auto;
+    width:70vmax; height:70vmax; border-radius:50%;
+    background:radial-gradient(circle at center,rgba(255,255,255,0.9),rgba(255,255,255,0.6) 20%,rgba(255,255,255,0.1) 40%,rgba(0,0,0,0) 70%);
+    filter:blur(28px);
+    opacity:0; transform:scale(0.8);
+    transition:opacity 220ms linear,transform 220ms cubic-bezier(.2,.9,.2,1);
+    pointer-events:none;
+  }
+  video#introVideo {
+    position:fixed; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    background:#000;
+    opacity:0;
+    transition:opacity 700ms ease;
+    z-index:1; /* below button until activated */
+    pointer-events:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="light-ball" id="lightBall"></div>
+  <button id="clickBtn"><span id="clickText" class="click-text">click me</span></button>
+</div>
+
+<video id="introVideo" src="intro.mp4" preload="auto"></video>
+
+<audio id="audioClick" preload="auto" src="videoplayback.m4a"></audio>
+<audio id="audioShutdown" preload="auto" src="shutdwn.m4a"></audio>
+
+<script>
+const STEPS_TO_FULL = 4;   // 4 progressive brightening clicks
+const CLICK_THRESHOLD = 5; // 5th click -> video
+const BASE_BRIGHT = 0.12;
+const MAX_BRIGHT = 1.0;
+const MAX_OPACITY = 0.95;
+
+const stage = document.getElementById('stage');
+const lightBall = document.getElementById('lightBall');
+const btn = document.getElementById('clickBtn');
+const txt = document.getElementById('clickText');
+const video = document.getElementById('introVideo');
+const audioClick = document.getElementById('audioClick');
+const audioShutdown = document.getElementById('audioShutdown');
+
+let clicks = 0;
+let busy = false;
+
+function safePlay(a){
+  try{
+    const p=a.play();
+    if(p&&p.then)return p.catch(()=>{});
+  }catch{}
+}
+
+function updateBrightness(step){
+  const t=Math.min(step,STEPS_TO_FULL)/STEPS_TO_FULL;
+  stage.style.filter=`brightness(${(BASE_BRIGHT+MAX_BRIGHT*t).toFixed(3)})`;
+  lightBall.style.opacity=t*MAX_OPACITY;
+  lightBall.style.transform=`scale(${0.8+0.25*t})`;
+}
+
+async function startVideo(){
+  busy=true;
+  await safePlay(audioShutdown);
+  // fade stage -> in video
+  stage.style.opacity=0;
+  video.style.zIndex=3;
+  video.style.pointerEvents='auto';
+  video.style.opacity=1;
+  await video.play().catch(()=>{});
+}
+
+btn.addEventListener('click',async()=>{
+  if(busy)return;
+  clicks++;
+  await safePlay(audioClick);
+
+  if(clicks>=CLICK_THRESHOLD){
+    updateBrightness(STEPS_TO_FULL);
+    startVideo();
+    return;
+  }
+
+  updateBrightness(clicks);
+  txt.style.transform='scale(1.04)';
+  setTimeout(()=>{txt.style.transform='';},120);
+});
+
+btn.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();btn.click();}
+});
+
+updateBrightness(0);
+</script>
+</body>
+</html>
