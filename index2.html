@@ -32,12 +32,6 @@
       position: relative;
     }
 
-    body.signal-fade main {
-      filter: blur(6px) saturate(0.5);
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
     body::before,
     body::after {
       content: "";
@@ -65,91 +59,9 @@
       animation: scanline 10s linear infinite;
     }
 
-    body.signal-fade main {
-      filter: blur(6px) saturate(0.5);
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    body.signal-fade footer,
-    body.signal-fade .audio-toggle {
-      pointer-events: none;
-      opacity: 0.3;
-    }
-
     @keyframes scanline {
       from { transform: translateY(0); }
       to { transform: translateY(100%); }
-    }
-
-    #cyber-background {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .cyber-orb {
-      position: absolute;
-      width: clamp(180px, 20vw, 280px);
-      height: clamp(180px, 20vw, 280px);
-      background: radial-gradient(circle, rgba(61, 251, 255, 0.18), rgba(255, 31, 184, 0));
-      border: 1px solid rgba(61, 251, 255, 0.2);
-      filter: blur(0.5px);
-      animation: drift 18s linear infinite;
-      mix-blend-mode: screen;
-    }
-
-    .cyber-orb:nth-child(1) { top: -5%; left: 5%; animation-duration: 26s; }
-    .cyber-orb:nth-child(2) { top: 35%; right: -8%; animation-duration: 32s; }
-    .cyber-orb:nth-child(3) { bottom: -10%; left: 10%; animation-duration: 22s; }
-
-    @keyframes drift {
-      0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.45; }
-      25% { transform: translate3d(40px, 60px, 0) rotate(12deg); opacity: 0.6; }
-      50% { transform: translate3d(-30px, 120px, 0) rotate(22deg); opacity: 0.5; }
-      75% { transform: translate3d(60px, -40px, 0) rotate(32deg); opacity: 0.7; }
-      100% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0.45; }
-    }
-
-    .cyber-stream {
-      position: absolute;
-      width: 140%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(61, 251, 255, 0.5), transparent);
-      animation: stream 12s linear infinite;
-      opacity: 0.5;
-    }
-
-    .cyber-stream:nth-child(4) { top: 20%; left: -20%; }
-    .cyber-stream:nth-child(5) { top: 60%; left: -30%; animation-duration: 16s; }
-    .cyber-stream:nth-child(6) { top: 85%; left: -10%; animation-duration: 10s; }
-
-    @keyframes stream {
-      0% { transform: translateX(0); opacity: 0; }
-      20% { opacity: 0.55; }
-      50% { opacity: 0.75; }
-      100% { transform: translateX(40%); opacity: 0; }
-    }
-
-    .cyber-node {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--neon-magenta);
-      box-shadow: 0 0 8px rgba(255, 31, 184, 0.8);
-      animation: pulse-node 2.8s ease-in-out infinite;
-    }
-
-    .cyber-node:nth-child(7) { top: 15%; left: 45%; animation-delay: 0.4s; }
-    .cyber-node:nth-child(8) { top: 55%; left: 25%; animation-delay: 1s; }
-    .cyber-node:nth-child(9) { top: 75%; right: 15%; animation-delay: 1.8s; }
-
-    @keyframes pulse-node {
-      0%, 100% { transform: scale(1); opacity: 0.65; }
-      50% { transform: scale(1.8); opacity: 1; }
     }
 
     main {
@@ -644,147 +556,6 @@
       line-height: 1.6;
     }
 
-    .map-wrap {
-      display: grid;
-      gap: clamp(1.5rem, 4vw, 3.5rem);
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      align-items: stretch;
-    }
-
-    .map-grid {
-      position: relative;
-      background: rgba(6, 12, 34, 0.85);
-      border: 1px solid rgba(61, 251, 255, 0.25);
-      box-shadow: inset 0 0 40px rgba(61, 251, 255, 0.12), 0 0 40px rgba(255, 31, 184, 0.15);
-      overflow: hidden;
-      min-height: 320px;
-    }
-
-    .map-grid::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(255, 31, 184, 0.05) 1px, transparent 1px),
-                  linear-gradient(0deg, rgba(61, 251, 255, 0.05) 1px, transparent 1px);
-      background-size: 70px 70px;
-      opacity: 0.4;
-      mix-blend-mode: lighten;
-    }
-
-    .city-map {
-      position: relative;
-      width: 100%;
-      height: auto;
-      filter: drop-shadow(0 0 12px rgba(61, 251, 255, 0.35));
-    }
-
-    .district {
-      fill: rgba(61, 251, 255, 0.18);
-      stroke: rgba(255, 31, 184, 0.5);
-      stroke-width: 2;
-      transition: fill 0.3s ease, stroke 0.3s ease, filter 0.3s ease;
-      cursor: pointer;
-      outline: none;
-    }
-
-    .district:hover,
-    .district:focus,
-    .district.active {
-      fill: rgba(255, 31, 184, 0.28);
-      stroke: rgba(61, 251, 255, 0.8);
-      filter: drop-shadow(0 0 18px rgba(61, 251, 255, 0.45));
-    }
-
-    .map-pulse {
-      fill: none;
-      stroke: rgba(61, 251, 255, 0.3);
-      stroke-dasharray: 6;
-      animation: orbit 14s linear infinite;
-    }
-
-    @keyframes orbit {
-      to { stroke-dashoffset: -120; }
-    }
-
-    .territory-panel {
-      background: rgba(10, 15, 40, 0.85);
-      border: 1px solid rgba(255, 31, 184, 0.25);
-      padding: clamp(1.5rem, 3vw, 2.4rem);
-      box-shadow: inset 0 0 32px rgba(255, 31, 184, 0.12), 0 0 24px rgba(61, 251, 255, 0.18);
-      display: grid;
-      gap: 1rem;
-    }
-
-    .territory-output h3 {
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 0.3em;
-      font-size: clamp(1.1rem, 1.8vw, 1.6rem);
-      color: var(--neon-cyan);
-      margin: 0;
-    }
-
-    .territory-output p {
-      color: rgba(228, 248, 255, 0.7);
-      line-height: 1.7;
-    }
-
-    .territory-meta {
-      display: grid;
-      gap: 0.8rem;
-    }
-
-    .meta-line {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(228, 248, 255, 0.7);
-      border-bottom: 1px dashed rgba(61, 251, 255, 0.2);
-      padding-bottom: 0.5rem;
-    }
-
-    .meta-line strong {
-      color: var(--neon-magenta);
-      font-weight: 500;
-    }
-
-    .rivalry {
-      display: grid;
-      gap: 0.6rem;
-    }
-
-    .rivalry strong {
-      font-size: 0.78rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(255, 140, 51, 0.85);
-    }
-
-    .rival-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .rival-tag {
-      border: 1px solid rgba(255, 31, 184, 0.4);
-      padding: 0.4rem 0.9rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(228, 248, 255, 0.8);
-      background: rgba(255, 31, 184, 0.12);
-    }
-
-    .map-notes {
-      font-size: 0.75rem;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: rgba(228, 248, 255, 0.5);
-    }
-
     .exit {
       text-align: center;
     }
@@ -848,69 +619,6 @@
       background: linear-gradient(130deg, rgba(255, 31, 184, 0.15), transparent 55%);
       mix-blend-mode: screen;
       pointer-events: none;
-    }
-
-    .background-check {
-      margin-top: 2rem;
-      display: grid;
-      gap: 1.1rem;
-      text-align: left;
-    }
-
-    .check-group {
-      display: grid;
-      gap: 0.5rem;
-    }
-
-    .check-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-
-    .check-tag {
-      border: 1px solid rgba(61, 251, 255, 0.35);
-      padding: 0.45rem 0.85rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
-      background: rgba(6, 12, 32, 0.7);
-      color: rgba(228, 248, 255, 0.75);
-    }
-
-    .check-tag.active {
-      border-color: var(--neon-magenta);
-      background: rgba(255, 31, 184, 0.15);
-      color: var(--fg);
-    }
-
-    .background-check input,
-    .background-check select {
-      background: rgba(3, 5, 18, 0.85);
-      border: 1px solid rgba(61, 251, 255, 0.4);
-      color: var(--fg);
-      padding: 0.6rem;
-      font-family: 'IBM Plex Mono', monospace;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .background-check input:focus,
-    .background-check select:focus {
-      border-color: var(--neon-magenta);
-      box-shadow: 0 0 14px rgba(255, 31, 184, 0.4);
-      outline: none;
-    }
-
-    .check-status {
-      min-height: 1rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(228, 248, 255, 0.6);
-      text-align: center;
     }
 
     .boot-line {
@@ -1085,20 +793,107 @@
         height: 80px;
       }
     }
+    /* === MAP SYSTEM (rv = revenant) === */
+.rv-map-toggle{
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 120;
+  display:inline-grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border-radius:10px;
+  border:1px solid rgba(61,251,255,0.18);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+  box-shadow: 0 6px 22px rgba(0,0,0,0.6);
+  cursor:pointer;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--neon-cyan);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.rv-map-toggle:hover{ transform: translateY(-4px); box-shadow: 0 10px 30px rgba(61,251,255,0.08); }
+
+.rv-map-overlay{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2,4,10,0.65);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+  z-index: 115;
+}
+.rv-map-overlay.visible{
+  opacity: 1;
+  pointer-events: all;
+}
+
+.rv-map-panel{
+  width: min(920px, 92vw);
+  max-height: 86vh;
+  background: rgba(8,12,30,0.95);
+  border: 1px solid rgba(61,251,255,0.18);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 0 40px rgba(61,251,255,0.03);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.rv-map-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.rv-map-title{
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--neon-cyan);
+  letter-spacing: 0.35em;
+  text-transform:uppercase;
+  font-size:0.78rem;
+}
+
+.rv-map-close{
+  background:transparent;
+  border:0;
+  color:var(--neon-magenta);
+  padding:8px 10px;
+  cursor:pointer;
+  font-weight:700;
+  border-radius:8px;
+}
+.rv-map-close:hover{ filter:brightness(1.15); transform:translateY(-2px); }
+
+.rv-map-wrapper{
+  overflow:auto;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.02);
+  padding:6px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+}
+.rv-map-img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height: calc(86vh - 120px);
+  object-fit: contain;
+  border-radius:6px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+@media (max-width:520px){
+  .rv-map-panel{ padding:10px; width: 96vw; max-height: 90vh; }
+  .rv-map-toggle{ width:44px; height:44px; top:0.7rem; right:0.7rem;}
+}
+
   </style>
 </head>
 <body>
-  <div id="cyber-background">
-    <div class="cyber-orb"></div>
-    <div class="cyber-orb"></div>
-    <div class="cyber-orb"></div>
-    <div class="cyber-stream"></div>
-    <div class="cyber-stream"></div>
-    <div class="cyber-stream"></div>
-    <div class="cyber-node"></div>
-    <div class="cyber-node"></div>
-    <div class="cyber-node"></div>
-  </div>
   <div id="boot-overlay">
     <div class="boot-sequence">
       <span class="boot-line" data-delay="0">INITIALIZING INTERCEPT ARRAY...</span>
@@ -1107,27 +902,7 @@
       <span class="boot-line" data-delay="2100">TRACE CLEANSE: 99.7% COMPLETE.</span>
       <span class="boot-line" data-delay="2800">ACCESS NODE: NEXUS://REVENANT-DIVISION</span>
       <span class="boot-line" data-delay="3500">STATUS: <span class="glitch glitch-anim" data-text="ACCESS GRANTED">ACCESS GRANTED</span></span>
-      <form class="background-check" id="background-check">
-        <div class="check-group">
-          <label for="check-alias">Runner Alias</label>
-          <input type="text" id="check-alias" maxlength="18" placeholder="Enter alias" required>
-        </div>
-        <div class="check-group">
-          <label for="check-code">Cipher Clearance</label>
-          <input type="text" id="check-code" placeholder="Specter Phrase" required>
-        </div>
-        <div class="check-group">
-          <span style="font-size:0.72rem; letter-spacing:0.28em; text-transform:uppercase; color:rgba(228,248,255,0.7);">Declare Allegiance</span>
-          <div class="check-options" id="allegiance-options">
-            <span class="check-tag" data-tag="rebel">Rebel Cell</span>
-            <span class="check-tag" data-tag="merc">Mercenary</span>
-            <span class="check-tag" data-tag="corp">Corp Sympathizer</span>
-          </div>
-        </div>
-        <button class="button" type="submit" id="validate-access">Validate Identity</button>
-        <span class="check-status" id="check-status"></span>
-      </form>
-      <button class="button" id="boot-enter" style="margin-top:2rem; display:none;">ENTER THE NEXUS</button>
+      <button class="button" id="boot-enter" style="margin-top:2rem;">ENTER THE NEXUS</button>
     </div>
   </div>
 
@@ -1364,7 +1139,7 @@
               <label for="specialty">Primary Specialty</label>
               <input type="text" id="specialty" name="specialty" placeholder="Signal Hijack / Field Ops / etc">
             </div>
-            <div class="terminal-field">
+            <div className="terminal-field">
               <label for="motivation">Motivation Vector</label>
               <textarea id="motivation" name="motivation" placeholder="Deliver your origin myth."></textarea>
             </div>
@@ -1398,53 +1173,6 @@
       </div>
     </section>
 
-    <section id="territories" class="wave">
-      <span class="step-label">Phase 6 // Territorial Intelligence</span>
-      <h2>NeoCity Control Map</h2>
-      <p>
-        Observe NeoCity’s fractured dominion. Districts shimmer with different creeds, rivalries pulse beneath the pavement. Hover a sector to decrypt who commands it—and who they hunt.
-      </p>
-      <div class="map-wrap">
-        <div class="map-grid">
-          <svg class="city-map" viewBox="0 0 600 420" role="img" aria-labelledby="map-title">
-            <title id="map-title">NeoCity Territory Allocation</title>
-            <defs>
-              <linearGradient id="district-glow" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="rgba(61, 251, 255, 0.3)" />
-                <stop offset="100%" stop-color="rgba(255, 31, 184, 0.28)" />
-              </linearGradient>
-            </defs>
-            <polygon class="district" tabindex="0" data-gang="revenant" points="95,110 230,70 285,135 245,220 130,210" />
-            <polygon class="district" tabindex="0" data-gang="chrome" points="280,80 420,60 470,150 360,210 290,170" />
-            <polygon class="district" tabindex="0" data-gang="azure" points="150,230 260,230 300,315 210,355 130,310" />
-            <polygon class="district" tabindex="0" data-gang="wraith" points="315,240 420,220 505,260 460,330 360,320" />
-            <polygon class="district" tabindex="0" data-gang="lotus" points="70,240 125,260 150,335 90,360 40,300" />
-            <circle class="map-pulse" cx="300" cy="200" r="160" />
-          </svg>
-        </div>
-        <div class="territory-panel">
-          <span class="panel-title">Encrypted Territory Feed</span>
-          <div class="territory-output">
-            <h3 id="territory-gang">Revenant Division</h3>
-            <p id="territory-desc">Signal uplinks woven through the old transit spires. Revenants hijack surveillance beams and rewrite the city’s memory nightly.</p>
-          </div>
-          <div class="territory-meta">
-            <div class="meta-line"><strong>Sector</strong><span id="territory-zone">Sector 7G</span></div>
-            <div class="meta-line"><strong>Specialty</strong><span id="territory-specialty">Signal Infiltration</span></div>
-          </div>
-          <div class="rivalry">
-            <strong>Rivals</strong>
-            <div class="rival-tags" id="territory-rivals">
-              <span class="rival-tag">Chrome Syndicate</span>
-            </div>
-          </div>
-          <div class="map-notes">
-            Data refreshed every 44 minutes. Spikes indicate active turf conflict.
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="wave exit">
       <h2>Exit Protocol Engaged</h2>
       <div class="exit-countdown" id="exit-countdown">00:45</div>
@@ -1456,6 +1184,21 @@
       </div>
     </section>
   </main>
+<!-- === MAP BUTTON + OVERLAY === -->
+<button class="rv-map-toggle" id="rvMapToggle" aria-expanded="false" aria-controls="rvMapOverlay" title="Open City Map">🗺️</button>
+
+<div class="rv-map-overlay" id="rvMapOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="rv-map-panel" role="document" aria-label="City map panel">
+    <div class="rv-map-header">
+      <div class="rv-map-title">CITY MAP // NEOCITY GRID</div>
+      <button class="rv-map-close" id="rvMapClose">CLOSE</button>
+    </div>
+
+    <div class="rv-map-wrapper">
+      <img src="citymap.png" alt="City map" class="rv-map-img">
+    </div>
+  </div>
+</div>
 
   <footer>
     Revenant Division / NeoCity / Signal Auth 7G-Σ. | Fabricated entirely via AI directives. No backend. No traces.
@@ -1502,89 +1245,16 @@
     let bootActive = true;
     const bootOverlay = document.getElementById('boot-overlay');
     const bootEnter = document.getElementById('boot-enter');
-    const backgroundForm = document.getElementById('background-check');
-    const checkAlias = document.getElementById('check-alias');
-    const checkCode = document.getElementById('check-code');
-    const checkStatus = document.getElementById('check-status');
-    const validateAccess = document.getElementById('validate-access');
-    const allegianceOptions = document.getElementById('allegiance-options');
-    const checkTags = allegianceOptions.querySelectorAll('.check-tag');
+
     const bootLines = document.querySelectorAll('.boot-line');
-
-    let selectedTag = null;
-    let clearanceVerified = false;
-    let failedAttempts = 0;
-
-    function runBootSequence() {
-      bootLines.forEach(line => {
-        line.classList.remove('visible');
-        const delay = parseInt(line.dataset.delay, 10);
-        setTimeout(() => line.classList.add('visible'), delay);
-      });
-      backgroundForm.reset();
-      checkTags.forEach(tag => tag.classList.remove('active'));
-      selectedTag = null;
-      clearanceVerified = false;
-      checkStatus.textContent = '';
-      validateAccess.disabled = false;
-      bootEnter.style.display = 'none';
-      failedAttempts = 0;
-    }
-
-    runBootSequence();
-
-    checkTags.forEach(tag => {
-      tag.addEventListener('click', () => {
-        checkTags.forEach(t => t.classList.remove('active'));
-        tag.classList.add('active');
-        selectedTag = tag.dataset.tag;
-      });
-    });
-
-    backgroundForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const alias = checkAlias.value.trim();
-      const code = checkCode.value.trim().toUpperCase();
-      if (alias.length < 3) {
-        checkStatus.textContent = 'Alias too faint. amplify.';
-        checkStatus.style.color = '#ff6b6b';
-        return;
-      }
-      if (!selectedTag) {
-        checkStatus.textContent = 'Declare allegiance for verification.';
-        checkStatus.style.color = '#ff6b6b';
-        return;
-      }
-      if (selectedTag === 'corp') {
-        checkStatus.textContent = 'Corp sympathizers flagged. access denied.';
-        checkStatus.style.color = '#ff6b6b';
-        return;
-      }
-      const clearancePhrase = 'GHOST-LINE';
-      if (code !== clearancePhrase) {
-        failedAttempts += 1;
-        checkStatus.style.color = '#ff8c33';
-        checkStatus.textContent = failedAttempts > 1 ? 'Invalid cipher. Hint: ghost-line mantra.' : 'Invalid cipher. decrypt again.';
-        return;
-      }
-      clearanceVerified = true;
-      validateAccess.disabled = true;
-      checkStatus.style.color = '#3dfbff';
-      checkStatus.textContent = `Identity cleared, ${alias.toUpperCase()} .`;
-      bootEnter.style.display = 'inline-flex';
-      bootEnter.focus();
+    bootLines.forEach(line => {
+      const delay = parseInt(line.dataset.delay, 10);
+      setTimeout(() => line.classList.add('visible'), delay);
     });
 
     bootEnter.addEventListener('click', () => {
-      if (!clearanceVerified) return;
       bootOverlay.classList.add('hidden');
       bootActive = false;
-      document.body.classList.remove('signal-fade');
-      if (countdown <= 0) {
-        countdown = 45;
-        exitCountdown.textContent = '00:45';
-        bootEnter.textContent = 'ENTER THE NEXUS';
-      }
       startAmbient();
     });
 
@@ -1764,9 +1434,8 @@
       if (countdown === 0) {
         document.body.classList.add('signal-fade');
         bootOverlay.classList.remove('hidden');
+        bootOverlay.style.opacity = 0.98;
         bootEnter.textContent = 'RE-ENTER THE NEXUS';
-        bootActive = true;
-        runBootSequence();
       }
     }, 1000);
 
@@ -1776,78 +1445,7 @@
       exitCountdown.textContent = '00:45';
       document.body.classList.remove('signal-fade');
       bootOverlay.classList.add('hidden');
-      bootEnter.textContent = 'ENTER THE NEXUS';
       bootActive = false;
-      runBootSequence();
-    });
-
-    const territoryData = {
-      revenant: {
-        name: 'Revenant Division',
-        zone: 'Sector 7G',
-        specialty: 'Signal Infiltration',
-        rivals: ['Chrome Syndicate'],
-        description: 'Signal uplinks woven through transit spires. Revenants hijack surveillance beams and rewrite the city\'s memory nightly.'
-      },
-      chrome: {
-        name: 'Chrome Syndicate',
-        zone: 'Skyline Verge',
-        specialty: 'Augment Trafficking',
-        rivals: ['Revenant Division', 'Azure Wraiths'],
-        description: 'Mercenary enforcers roost among chrome towers, trafficking implants and bribing drone police to mirror their will.'
-      },
-      azure: {
-        name: 'Azure Wraiths',
-        zone: 'Flooded Docklands',
-        specialty: 'Ghost Logistics',
-        rivals: ['Chrome Syndicate'],
-        description: 'They move contraband through tidal sewers, ghosts under neon rain, decoding rival shipments before they breathe.'
-      },
-      wraith: {
-        name: 'Helix Wraith Enclave',
-        zone: 'Quantum Bazaar',
-        specialty: 'Bio-Mod Black Market',
-        rivals: ['Lotus Arc'],
-        description: 'Bio-smiths splicing street DNA with outlaw tech. Every market deal echoes with encrypted blood oaths.'
-      },
-      lotus: {
-        name: 'Lotus Arc Collective',
-        zone: 'Underground Gardens',
-        specialty: 'Psionic Espionage',
-        rivals: ['Helix Wraith Enclave'],
-        description: 'Cultivates psionic flora beneath rusted tram lines. Their spores seed hallucinations inside corporate think tanks.'
-      }
-    };
-
-    const districtElements = document.querySelectorAll('.district');
-    const territoryGang = document.getElementById('territory-gang');
-    const territoryDesc = document.getElementById('territory-desc');
-    const territoryZone = document.getElementById('territory-zone');
-    const territorySpecialty = document.getElementById('territory-specialty');
-    const territoryRivals = document.getElementById('territory-rivals');
-
-    function renderTerritory(key) {
-      const data = territoryData[key];
-      if (!data) return;
-      districtElements.forEach(el => el.classList.toggle('active', el.dataset.gang === key));
-      territoryGang.textContent = data.name;
-      territoryDesc.textContent = data.description;
-      territoryZone.textContent = data.zone;
-      territorySpecialty.textContent = data.specialty;
-      territoryRivals.innerHTML = '';
-      data.rivals.forEach(rival => {
-        const span = document.createElement('span');
-        span.className = 'rival-tag';
-        span.textContent = rival;
-        territoryRivals.appendChild(span);
-      });
-    }
-
-    renderTerritory('revenant');
-
-    districtElements.forEach(el => {
-      el.addEventListener('mouseenter', () => renderTerritory(el.dataset.gang));
-      el.addEventListener('focus', () => renderTerritory(el.dataset.gang));
     });
 
     const parallax = document.createElement('div');
@@ -1881,6 +1479,47 @@
       secretModal.classList.remove('visible');
       secretBuffer = '';
     });
+    /* === MAP OPEN/CLOSE (MAP LOGIC) === */
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('rvMapToggle');
+  const overlay = document.getElementById('rvMapOverlay');
+  const closeBtn = document.getElementById('rvMapClose');
+
+  if (!toggle || !overlay || !closeBtn) {
+    console.warn("Map elements missing:", { toggle, overlay, closeBtn });
+    return;
+  }
+
+  function openMap(){
+    overlay.classList.add('visible');
+    overlay.setAttribute('aria-hidden','false');
+    toggle.setAttribute('aria-expanded','true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMap(){
+    overlay.classList.remove('visible');
+    overlay.setAttribute('aria-hidden','true');
+    toggle.setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+  }
+
+  toggle.addEventListener('click', () => {
+    if (overlay.classList.contains('visible')) closeMap();
+    else openMap();
+  });
+
+  closeBtn.addEventListener('click', closeMap);
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeMap();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('visible')) closeMap();
+  });
+});
+
   </script>
 </body>
 </html>
