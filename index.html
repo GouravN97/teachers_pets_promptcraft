@@ -132,6 +132,40 @@ btn.addEventListener('keydown',e=>{
 });
 
 updateBrightness(0);
+
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // ID of your video element — change if yours is different
+    const video = document.getElementById('introVideo') || document.querySelector('video');
+    if (!video) { console.warn('No video element found to watch for end.'); return; }
+
+    // Primary: navigate when playback ends
+    video.addEventListener('ended', () => {
+      // same-tab navigation; use replace() so Back won't return to this page
+      window.location.replace('index4.html');
+      // if you prefer keeping this page in history, use:
+      // window.location.href = 'index4.html';
+    });
+
+    // Fallback: if 'ended' never fires, detect near-end via timeupdate
+    const redirectNearEnd = () => {
+      const onTime = () => {
+        if (!isFinite(video.duration)) return;
+        // when within 0.5s of the end, redirect
+        if (video.currentTime >= Math.max(0, video.duration - 0.5)) {
+          video.removeEventListener('timeupdate', onTime);
+          window.location.replace('index4.html');
+        }
+      };
+      video.addEventListener('timeupdate', onTime);
+    };
+
+    if (isFinite(video.duration) && video.duration > 0) redirectNearEnd();
+    else video.addEventListener('loadedmetadata', redirectNearEnd);
+  });
+</script>
+
 </body>
 </html>
